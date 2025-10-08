@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import AuthButton from "./AuthButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { resetPassword } from "../actions/auth";
+import { resetPassword } from "../../actions/auth";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();

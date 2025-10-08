@@ -1,4 +1,4 @@
-import { createClient } from "../utils/supabase/server";
+import { createClient } from "../../utils/supabase/server";
 import Link from "next/link";
 import React from "react";
 import Logout from "./Logout";
@@ -10,7 +10,7 @@ const Navbar = async () => {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className="absolute top-0 left-0 w-full z-50 bg-transparent border-b" >
+    <nav className="absolute top-0 left-0 w-full z-50 bg-white border-b" >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         {/* Logo / Title */}
         <Link href="/" className="text-lg font-semibold text-gray-800 hover:text-blue-600">

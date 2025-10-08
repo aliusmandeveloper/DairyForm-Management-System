@@ -1,5 +1,5 @@
 "use client";
-import { SignOut } from ".././actions/auth";
+import { SignOut } from "../../actions/auth";
 import React, { useState } from "react";
 
 const Logout = () => {

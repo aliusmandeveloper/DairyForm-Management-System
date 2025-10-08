@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignUp } from "../actions/auth";
+import { SignUp } from "../../actions/auth";
 import AuthButton from "./AuthButton";
 
 const SignUpForm = () => {
