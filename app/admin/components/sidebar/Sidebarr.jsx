@@ -1,27 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { createClient } from "../../../../utils/supabase/client";
+import React from "react";
 import Link from "next/link";
 
 const Sidebar = ({ isSidebarOpen, handleLogout }) => {
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setRole(user?.user_metadata?.role || "admin");
-    };
-    fetchUserRole();
-  }, []);
-
   const links = [
-    { name: "Dashboard", href: "/admin/dashboard/list" },
-    ...(role === "superadmin"
-      ? [{ name: "Manage Admins", href: "/admin/manage-admins" }]
-      : []),
+    { name: "Dashboard", href: "/admin/dashboard/dashboard" },
+    { name: "Manage Dairy Form", href: "/admin/dashboard/managedairyform" },
+    { name: "Cows", href: "/admin/dashboard/cows" },
+    { name: "Customers", href: "/admin/dashboard/customers" },
+    // { name: "Milk Sale", href: "/admin/dashboard/milk-sales" },
   ];
 
   return (

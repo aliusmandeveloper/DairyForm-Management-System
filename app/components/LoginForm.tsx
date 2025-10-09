@@ -14,7 +14,7 @@ const LoginForm = () => {
     const formData = new FormData(event.currentTarget);
     const result = await SignIn(formData);
     if (result.status === "success") {
-      router.push("/");
+      router.push("/admin/dashboard");
     } else {
       setError(result.status);
     }

@@ -1,3 +1,4 @@
+// middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -18,9 +19,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -29,14 +28,14 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // ✅ Get the logged-in user
+  // ✅ Get current logged-in user
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 
-  // 🛑 Redirect non-logged users to login
+  // 🛑 Redirect if not logged in
   if (
     !user &&
     !pathname.includes("/login") &&
@@ -48,16 +47,6 @@ export async function updateSession(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  // 🧠 Role-based protection
-  const role = user?.user_metadata?.role;
-
-  // If normal admin tries to access superadmin routes → redirect
-  if (pathname.startsWith("/admin/manage-admins") && role !== "superadmin") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin/dashboard/list";
     return NextResponse.redirect(url);
   }
 

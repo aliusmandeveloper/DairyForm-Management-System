@@ -47,14 +47,7 @@ const SignUpForm = () => {
         required
       />
 
-      {/* Role select */}
-      <select
-        name="role"
-        className="border rounded-md px-3 py-2 bg-white text-gray-700"
-      >
-        <option value="admin">Admin (Dairy Manager)</option>
-        <option value="super_admin">Super Admin</option>
-      </select>
+   
 
       <AuthButton type="Sign up" loading={loading} />
       {error && <p className="text-red-500 text-sm">{error}</p>}
