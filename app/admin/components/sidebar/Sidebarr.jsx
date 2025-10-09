@@ -4,10 +4,11 @@ import Link from "next/link";
 
 const Sidebar = ({ isSidebarOpen, handleLogout }) => {
   const links = [
-    { name: "Dashboard", href: "/admin/dashboard/dashboard" },
-    { name: "Manage Dairy Form", href: "/admin/dashboard/managedairyform" },
+    { name: "Manage Dairy Form", href: "/admin/dashboard/dashboard" },
+    // { name: "Manage Dairy Form", href: "/admin/dashboard/managedairyform" },
     { name: "Cows", href: "/admin/dashboard/cows" },
     { name: "Customers", href: "/admin/dashboard/customers" },
+    { name: "Milk Detail", href: "/admin/dashboard/milkdetail" },
     // { name: "Milk Sale", href: "/admin/dashboard/milk-sales" },
   ];
 

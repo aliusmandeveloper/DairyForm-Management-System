@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../../utils/supabase/client";
 
-
 export default function DashboardTab() {
   const [stats, setStats] = useState({
     totalCows: 0,
@@ -54,23 +53,25 @@ export default function DashboardTab() {
   }, []);
 
   return (
-    <div className="p-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {[
-        { label: "Total Cows", value: stats.totalCows },
-        { label: "Milk Today", value: `${stats.milkToday} L` },
-        { label: "Remaining Milk", value: `${stats.remainingMilk} L` },
-        { label: "Sale Today", value: `${stats.saleToday} L` },
-      ].map((card, i) => (
-        <div
-          key={i}
-          className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center justify-center hover:shadow-lg transition"
-        >
-          <h3 className="text-lg font-semibold">{card.label}</h3>
-          <p className="text-3xl font-bold mt-2 text-green-600">
-            {card.value}
-          </p>
-        </div>
-      ))}
+    <div className="mt-10">
+      <div className="p-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: "Total Cows", value: stats.totalCows },
+          { label: "Milk Today", value: `${stats.milkToday} L` },
+          { label: "Remaining Milk", value: `${stats.remainingMilk} L` },
+          { label: "Sale Today", value: `${stats.saleToday} L` },
+        ].map((card, i) => (
+          <div
+            key={i}
+            className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center justify-center hover:shadow-lg transition"
+          >
+            <h3 className="text-lg font-semibold">{card.label}</h3>
+            <p className="text-3xl font-bold mt-2 text-green-600">
+              {card.value}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
