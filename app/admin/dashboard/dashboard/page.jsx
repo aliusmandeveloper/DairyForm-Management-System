@@ -8,8 +8,8 @@ export default function DairyFormManagement() {
     milkToday: 0,
     morningMilk: 0,
     eveningMilk: 0,
-    remainingMilk: 0,
     saleToday: 0,
+    remainingMilk: 0,
     avgPerCow: 0,
     utilization: 0,
   });
@@ -18,61 +18,58 @@ export default function DairyFormManagement() {
     const fetchStats = async () => {
       const today = new Date().toISOString().split("T")[0];
 
-      // 🐄 Total cows
+      // 🐄 1️⃣ Fetch total cows
       const { data: cows } = await supabase.from("cows").select("id");
 
-      // 🥛 Milk Records
-      const { data: milk } = await supabase
+      // 🥛 2️⃣ Fetch today’s milk collection
+      const { data: milkRecords } = await supabase
         .from("milk_records")
-        .select("session, total_milk, date");
+        .select("id, session, total_milk, date");
 
-      // 🧾 Dairy remaining milk
-      const { data: dairy } = await supabase
-        .from("dairyforms")
-        .select("milk_remaining")
-        .order("created_at", { ascending: false })
-        .limit(1);
-
-      // 💰 Sales
-      const { data: sales } = await supabase
-        .from("milk_sales")
-        .select("quantity, sale_date");
-
-      // ✅ Calculate totals for today
       const morningMilk =
-        milk
+        milkRecords
           ?.filter((m) => m.session === "morning" && m.date === today)
           .reduce((sum, m) => sum + Number(m.total_milk), 0) || 0;
 
       const eveningMilk =
-        milk
+        milkRecords
           ?.filter((m) => m.session === "evening" && m.date === today)
           .reduce((sum, m) => sum + Number(m.total_milk), 0) || 0;
 
       const milkToday = morningMilk + eveningMilk;
 
-      const todaySales =
-        sales?.reduce((sum, s) => {
-          const saleDate = new Date(s.sale_date).toISOString().split("T")[0];
-          if (saleDate === today) return sum + Number(s.quantity);
+      // 💰 3️⃣ Fetch sales (milk_distribution joined with milk_records)
+      const { data: distributions } = await supabase
+        .from("milk_distribution")
+        .select(`
+          quantity,
+          milk_records!inner(date)
+        `);
+
+      const saleToday =
+        distributions?.reduce((sum, d) => {
+          if (d.milk_records?.date === today)
+            return sum + Number(d.quantity);
           return sum;
         }, 0) || 0;
 
-      const remaining = dairy?.[0]?.milk_remaining || 0;
+      // 🧮 4️⃣ Derived values
+      const remainingMilk = milkToday - saleToday;
       const cowsCount = cows?.length || 0;
-      const avg = cowsCount ? (milkToday / cowsCount).toFixed(2) : 0;
+      const avgPerCow = cowsCount ? (milkToday / cowsCount).toFixed(2) : 0;
       const utilization = milkToday
-        ? ((todaySales / milkToday) * 100).toFixed(1)
+        ? ((saleToday / milkToday) * 100).toFixed(1)
         : 0;
 
+      // ✅ 5️⃣ Update UI
       setStats({
         totalCows: cowsCount,
         milkToday,
         morningMilk,
         eveningMilk,
-        remainingMilk: remaining,
-        saleToday: todaySales,
-        avgPerCow: avg,
+        saleToday,
+        remainingMilk,
+        avgPerCow,
         utilization,
       });
     };
@@ -82,31 +79,13 @@ export default function DairyFormManagement() {
 
   const cards = [
     { label: "Total Cows", value: stats.totalCows, color: "text-blue-600" },
-    {
-      label: "Morning Milk",
-      value: `${stats.morningMilk} L`,
-      color: "text-orange-500",
-    },
-    {
-      label: "Evening Milk",
-      value: `${stats.eveningMilk} L`,
-      color: "text-purple-500",
-    },
-    {
-      label: "Total Milk (Today)",
-      value: `${stats.milkToday} L`,
-      color: "text-green-600",
-    },
-    {
-      label: "Sale Today",
-      value: `${stats.saleToday} L`,
-      color: "text-indigo-600",
-    },
-    {
-      label: "Remaining Milk",
-      value: `${stats.remainingMilk} L`,
-      color: "text-gray-600",
-    },
+    { label: "Morning Milk", value: `${stats.morningMilk} L`, color: "text-orange-500" },
+    { label: "Evening Milk", value: `${stats.eveningMilk} L`, color: "text-purple-500" },
+    { label: "Total Milk (Today)", value: `${stats.milkToday} L`, color: "text-green-600" },
+    { label: "Sale Today", value: `${stats.saleToday} L`, color: "text-indigo-600" },
+    { label: "Remaining Milk", value: `${stats.remainingMilk} L`, color: "text-gray-600" },
+    { label: "Avg Per Cow", value: `${stats.avgPerCow} L`, color: "text-pink-600" },
+    { label: "Utilization", value: `${stats.utilization}%`, color: "text-teal-600" },
   ];
 
   return (
@@ -121,9 +100,7 @@ export default function DairyFormManagement() {
             className="bg-white shadow-md rounded-xl p-6 flex flex-col items-center justify-center hover:shadow-lg transition"
           >
             <h3 className="text-lg font-semibold">{card.label}</h3>
-            <p className={`text-3xl font-bold mt-2 ${card.color}`}>
-              {card.value}
-            </p>
+            <p className={`text-3xl font-bold mt-2 ${card.color}`}>{card.value}</p>
           </div>
         ))}
       </div>
