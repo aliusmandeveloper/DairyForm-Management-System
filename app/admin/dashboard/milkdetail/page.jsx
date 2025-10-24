@@ -303,7 +303,7 @@ export default function MilkPage() {
   };
 
   return (
-    <div className="p-6 mt-10 bg-gray-50 min-h-screen">
+    <div className="p-6 mt-20 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

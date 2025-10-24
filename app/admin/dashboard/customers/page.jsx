@@ -133,7 +133,7 @@ export default function CustomersPage() {
   );
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen mt-10">
+    <div className="p-6 bg-gray-50 min-h-screen mt-20">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">

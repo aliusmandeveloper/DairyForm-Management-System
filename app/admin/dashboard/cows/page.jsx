@@ -38,7 +38,7 @@ export default function CowsPage() {
 
 
   return (
-    <div className="p-6 mt-10 bg-gray-50 min-h-screen">
+    <div className="p-6 mt-20 bg-gray-50 min-h-screen">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-8">
